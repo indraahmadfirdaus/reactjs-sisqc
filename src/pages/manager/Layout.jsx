@@ -23,18 +23,18 @@ const ManagerLayout = () => {
   const { user, logout } = useUserStore()
   const [openModal, setOpenModal] = useState(false)
 
+  const handleLogout = () => {
+    logout();
+    message.success("Berhasil logout");
+    navigate("/login");
+  };
+
   const handleMenuClick = ({ key }) => {
     if (key === "logout") {
       handleLogout()
     } else if (key === "profile") {
       setOpenModal(true)
     }
-  };
-
-  const handleLogout = () => {
-    logout();
-    message.success("Berhasil logout");
-    navigate("/login");
   };
 
   const userMenu = (
