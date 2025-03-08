@@ -1,0 +1,37 @@
+/* global.css */
+
+/* Gunakan Inter dari Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Reset dasar */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Gunakan font Inter untuk semua elemen */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f5f7fa; /* Warna background dashboard yang soft */
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Pastikan layout 100% */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+/* Hilangkan list-style default */
+ul, ol {
+  list-style: none;
+}
+
+/* Hilangkan underline di link */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
