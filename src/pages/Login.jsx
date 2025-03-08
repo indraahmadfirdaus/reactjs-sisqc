@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Form, Input, Button, Typography } from "antd";
+import { Form, Input, Button, Typography, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import useUserStore from "../store/useUserStore";
 
@@ -10,8 +10,9 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Cek ukuran layar untuk responsive
+  // Check screen size for responsive design
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
@@ -19,11 +20,20 @@ const LoginPage = () => {
   }, []);
 
   const handleLogin = async (values) => {
-    const { email, password } = values;
-    const res = await loginUser(email, password);
+    try {
+      setIsSubmitting(true);
+      const { email, password } = values;
+      const res = await loginUser(email, password);
 
-    if (res.success) {
-      navigate(res.role === "OFFICER" ? "/officer/report" : "/manager/analytics");
+      if (res.success) {
+        navigate(res.role === "OFFICER" ? "/officer/report" : "/manager/analytics");
+      } else {
+        message.error("Login failed. Please check your credentials.");
+      }
+    } catch (error) {
+      message.error("An error occurred during login.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -52,13 +62,15 @@ const LoginPage = () => {
 
           <Form form={form} layout="vertical" onFinish={handleLogin}>
             <Form.Item name="email" label="Email" rules={[{ required: true, type: "email", message: "Masukkan email yang valid!" }]}>
-              <Input placeholder="Masukkan Email anda" />
+              <Input placeholder="Masukkan Email anda" disabled={isSubmitting} />
             </Form.Item>
             <Form.Item name="password" label="Kata Sandi" rules={[{ required: true, message: "Password wajib diisi!" }]}>
-              <Input.Password placeholder="Masukkan kata sandi anda" />
+              <Input.Password placeholder="Masukkan kata sandi anda" disabled={isSubmitting} />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" loading={loading} block style={{fontWeight: 'bold' }}>Login</Button>
+              <Button type="primary" htmlType="submit" loading={isSubmitting || loading} block style={{fontWeight: 'bold' }}>
+                {isSubmitting || loading ? 'Logging in...' : 'Login'}
+              </Button>
             </Form.Item>
           </Form>
 
